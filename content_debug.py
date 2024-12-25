@@ -1,9 +1,9 @@
 
 import polars as pl
 
-import app.globals as glb
+import globals as glb
 
-from app.utils import table_from_df
+from utils import table_from_df
 
 def content_debug():
     table = table_from_df(glb.dbgs_df,"debug_table")

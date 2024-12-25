@@ -1,7 +1,7 @@
 import globals as glb
 import polars as pl
 
-from app.content_debug import add_debug
+from content_debug import add_debug
 
 if glb.ACCESS_PARSER:
     # access_parser does not parse the big tables properly.  Misses entries

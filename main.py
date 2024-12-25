@@ -16,7 +16,7 @@ from content_report import create_report,content_report
 from polars import read_csv
 from accessdb import project_extract
 
-from app.globals import timesheet_file
+from globals import timesheet_file
 
 no_project_file = "No Project DB Loaded"
 no_timesheet_file = "No Timesheet CSV Loaded"

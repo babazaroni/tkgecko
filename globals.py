@@ -1,9 +1,9 @@
 #import pandas as pd
 import polars as pl
 
-PYODBC = False
+PYODBC = True
 ACCESS_PARSER = False
-MDB_PARSER = True
+MDB_PARSER = False
 
 db = None
 app = None
