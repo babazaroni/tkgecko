@@ -1,6 +1,6 @@
 import globals as glb
 import polars as pl
-import pandas as pd
+#import pandas as pd
 
 from content_debug import add_debug
 

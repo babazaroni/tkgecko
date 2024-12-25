@@ -1,5 +1,6 @@
 import sys
 import os
+import platform
 from pathlib import Path
 print("start print")
 print(sys.executable)
@@ -8,8 +9,14 @@ print("end print")
 #report_path = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop') + r"\report.xslx"
 #report_path = "report.xslx"
 
+
+if platform.system() == 'Windows':
+    slash = "\\"
+else:
+    slash = "/"
+
 report_path = str(Path.home())
-report_path = report_path + r"\report.xlsx"
+report_path = report_path + slash + "report.xlsx"
 print("report_path: ",report_path)
 
 #sys.path.append('/home/cc/Solas/webapp/pythonProject/app')

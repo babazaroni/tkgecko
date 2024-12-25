@@ -1,9 +1,16 @@
 #import pandas as pd
 import polars as pl
+import platform
 
-PYODBC = True
-ACCESS_PARSER = False
-MDB_PARSER = False
+if platform.system() == 'Windows':
+    PYODBC = True
+    ACCESS_PARSER = False
+    MDB_PARSER = False
+else:
+    PYODBC = False
+    ACCESS_PARSER = False
+    MDB_PARSER = True
+
 
 db = None
 app = None
