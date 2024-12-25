@@ -7,7 +7,8 @@ import datetime as dt
 import pprint
 from collections import defaultdict
 
-from globals import ACCESS_PARSER, MDB_PARSER
+from globals import ACCESS_PARSER, MDB_PARSER, PYODBC
+
 
 class GeneralException(Exception):
     def __init__(self,message):
@@ -106,6 +107,10 @@ def process_time_sheet():
             message = "No Rate for: {} at time {}".format(name,local_date)
             raise GeneralException(message)
 
+        if glb.PYODBC:
+            print("PYODBC rate",rate)
+            rate = float(rate)
+
         if glb.ACCESS_PARSER:
             rate = float(rate[1:]) #access parser put $ in front
         if glb.MDB_PARSER:
@@ -139,6 +144,8 @@ def get_rate(name,date):
     for row in glb.architect_rates.iter_rows(named = True):
         an = glb.architects['Architects'][int(row['Architect'])-1]
 
+        if PYODBC:
+            start_date = row['Rate Start Date']
         if ACCESS_PARSER:
             start_date = dt.datetime.strptime(row['Rate Start Date'],"%Y-%m-%d 00:00:00")
         if MDB_PARSER:

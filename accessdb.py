@@ -1,5 +1,6 @@
 import globals as glb
 import polars as pl
+import pandas as pd
 
 from content_debug import add_debug
 
@@ -31,10 +32,17 @@ def project_extract(db_path):
         dbq_string = "DBQ={}".format(db_path)
         driver_string = r"Driver={Microsoft Access Driver (*.mdb, *.accdb)};"
         cnn_string = driver_string + dbq_string
-        print("connect string: ")
         print(cnn_string)
         cnn = pyo.connect(cnn_string)
         cursor = cnn.cursor()
+        glb.tables_list = [t.table_name for t in cursor.tables(tableType='TABLE')]
+
+        glb.project_df = create_df_sql("select * from [Project Data]",cnn)
+        glb.architects = create_df_sql("select * from [Solas Architects]",cnn)
+        glb.architect_rates = create_df_sql("select * from [Solas Architect Rates]",cnn).sort('Rate Start Date')
+        glb.financial_df = create_df_sql("select * from [Financials]",cnn)
+
+        glb.project_titles = glb.project_df['Project Title'].to_list()
 
 
     if glb.ACCESS_PARSER:
@@ -53,6 +61,7 @@ def project_extract(db_path):
         glb.architect_rates = pl.DataFrame(architect_rates)
         financials = glb.db.parse_table('Financials')
         glb.financial_df = pl.DataFrame(financials)
+
 
     if glb.MDB_PARSER:
         print("starting MDB_PARSER")
@@ -80,6 +89,17 @@ def project_extract(db_path):
 
     glb.project_titles.sort()
 
+def create_df_sql(sql,conn):
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    rows_tuples = cursor.fetchall()
+    rows = [list(t) for t in rows_tuples]
+
+    columns = [column[0] for column in cursor.description]
+
+
+    df = pl.DataFrame(rows,schema=columns,orient='row')
+    return df
 
 def create_df(table):
     #print("create_df:",type(table))
