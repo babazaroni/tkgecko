@@ -2,6 +2,8 @@
 import polars as pl
 import platform
 
+# To create executable, run pyinstaller main.py --onefile --windowed
+
 if platform.system() == 'Windows':
     PYODBC = True
     ACCESS_PARSER = False
