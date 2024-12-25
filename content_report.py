@@ -17,7 +17,7 @@ class GeneralException(Exception):
 
 
 
-def content_report():
+def content_report(report_path):
 
     if glb.timesheet_df.is_empty() or glb.project_df.is_empty():
         print("not all files loaded")
@@ -26,7 +26,7 @@ def content_report():
     process_time_sheet()
     process_financials()
 
-    report_file_name = create_report()
+    report_file_name = create_report(report_path)
 
     return report_file_name
 
@@ -210,8 +210,9 @@ def create_summary(task,sheet,row,col):
 
     cv.render(sheet,row,col)
 
-def create_report():
+def create_report(report_file_path):
     report_file_name = "report.xlsx"
+    report_file_name = report_file_path
 
     #print(glb.project_titles_filtered)
     green1 = "006100"
@@ -302,7 +303,8 @@ def create_report():
 
 
     sheet.column_dimensions['A'].width = 40
-
+    print("workbook.save:")
+    print(report_file_name)
     workbook.save(filename = report_file_name)
     #save_excel_to_html2(report_file_name,'report.html')
 

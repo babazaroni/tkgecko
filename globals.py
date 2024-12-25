@@ -9,7 +9,6 @@ db = None
 app = None
 
 project_file = " "
-
 timesheet_file = " "
 
 search_term = None
