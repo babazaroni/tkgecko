@@ -74,11 +74,15 @@ def view_report_request():
     try:
         view_status.configure(text = "Viewing: " + report_path,text_color="green")
         print("view request")
-        #os.system("start excel.exe {}".format(report_path))
+
         #file_path = os.getcwd() + "\\report.xslx"
         #file_path = r"C:\Users\babaz\OneDrive\Documents\GitHub\tkgecko\report.xslx"
         #file_path = "report.xlsx"
-        os.startfile(report_path)
+
+        if platform.system() == 'Windows':
+            os.startfile(report_path)
+        else:
+            os.system("libreoffice {}".format(report_path))
 
         print(sys.executable)
         print(os.getcwd())
