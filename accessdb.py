@@ -32,10 +32,10 @@ def project_extract(db_path):
         dbq_string = "DBQ={}".format(db_path)
         driver_string = r"Driver={Microsoft Access Driver (*.mdb, *.accdb)};"
         cnn_string = driver_string + dbq_string
-        print(cnn_string)
+        print("accessdb:", cnn_string)
         cnn = pyo.connect(cnn_string)
         cursor = cnn.cursor()
-        glb.tables_list = [t.table_name for t in cursor.tables(tableType='TABLE')]
+        glb.tables_list = [t.table_name for t in cursor.tables()]
 
         glb.project_df = create_df_sql("select * from [Project Data]",cnn)
         glb.architects = create_df_sql("select * from [Solas Architects]",cnn)
