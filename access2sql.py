@@ -3,7 +3,9 @@ import polars as pl
 import pandas as pd
 
 import pyodbc as pyo
-import sqlalchemy as sa
+from sqlalchemy import create_engine
+
+import pprint
 
 def get_source_cnn(db_path):
     dbq_string = "DBQ={}".format(db_path)
@@ -81,46 +83,85 @@ def get_sql_field_names(df):
     field_list =  [f"[{column}]" + " " +sql_type(df[column].dtype) for column in df.columns]
     return ",".join(field_list)
 
+def filter_list_to_tuples(df_list):
+    tuples = []
+    for row in df_list:
+        for x,v in enumerate(row):
+            #print(str(type(v)))
+            if "Timestamp" in str(type(v)):
+                row[x] = str(row[x])
+            if "NaTType" in str(type(v)):
+                row[x] = None
+            if "datetime.datetime" in str(type(v)):
+                row[x] = row[x].isoformat()
+        tuples.append(tuple(row))
+    return df_list
+
+def manual_convert():
+    sql_field_names = get_sql_field_names(table_df)
+
+    exec_string = f"create table [{table_name}] ({sql_field_names})"
+
+    dest_cursor.execute(exec_string)
+
+    qs =",".join(["?" for column in table_df.columns])
+
+    df_list = table_df.values.tolist()
+    print("the df_list")
+    print(df_list)
+
+    df_tuples = filter_list_to_tuples(df_list)
+
+    #print(project_df.dtypes)
+    #print(sql_field_names)
+
+    many_exec = f"insert into [{table_name}] values ({qs})"
+    dest_cursor.executemany(many_exec,df_tuples)
+
+    dest_connection.commit()
+
+    print("-------------------- reading back ----------------------")
+    for row in dest_cursor.execute(f"select * from [{table_name}]"):
+        print(row)
+
+    pass
+
+
 #source_dir = "/home/cc/Solas/data/"
 #source_file = "Database_Updated_2024-6.accdb"
 
 source_dir = "C:/Users/babaz/OneDrive/Desktop/Solas V1/"
 source_file = "Database Updated 2024-V1.accdb"
 
+dest_engine = create_engine('sqlite:///Database Updated 2024-V1.sqlite')
+#source_engine = create_engine(f"access+pyodbc:///?odbc_connect=access+p}")
+
 source_cnn = get_source_cnn(source_dir + source_file)
 source_cursor = source_cnn.cursor()
 
 tables_list = [t.table_name for t in source_cursor.tables(tableType='TABLE')]
 
-print("table_list:",tables_list)
-
-dest_connection = sqlite3.connect("sql_new")
-dest_cursor = dest_connection.cursor()
-
-
+#dest_connection = sqlite3.connect("sql_new")
+#dest_cursor = dest_connection.cursor()
 
 for table_name in tables_list:
-    project_df = create_pd_df_sql(f"select * from [{table_name}]", source_cnn)
-    #project_df = create_pd_df_sql2(table_name, source_cnn)
+    print(f"converting: {table_name}")
+    table_df = create_pd_df_sql(f"select * from [{table_name}]", source_cnn)
+    #table_df = create_pd_df_sql2(f"[{table_name}]", source_cnn)
 
-    sql_field_names = get_sql_field_names(project_df)
+    table_df.to_sql(table_name,dest_engine,index = False, if_exists='replace')
 
-    exec_string = f"create table [{table_name}] ({sql_field_names})"
+    #manual_convert()
 
-    dest_cursor.execute(exec_string)
-
-    print(exec_string)
-    print("table_name:",table_name)
-    #print(project_df.dtypes)
-    #print(sql_field_names)
-
-
-
-    #columns = [f"[{name} {pl2sql_type(dtype)}]" for name,dtype in zip(df_info[table_name].columns,types)]
-
-    #field_list = ",".join(columns)
-    #sql = f"create table {table_name} ({field_list})"
-    #print(sql)
 
 dest_connection.close()
 source_cnn.close()
+
+#set primary keys
+
+key_connection = sqlite3.connect("example_sql.db")
+key_cursor = key_connection.cursor()
+
+tables_list = [t.table_name for t in source_cursor.tables(tableType='TABLE')]
+
+print(tables_list)
