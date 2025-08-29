@@ -2,7 +2,6 @@ import globals as glb
 import polars as pl
 #import pandas as pd
 
-from content_debug import add_debug
 
 if glb.ACCESS_PARSER:
     # access_parser does not parse the big tables properly.  Misses entries
@@ -18,7 +17,7 @@ if glb.PYODBC:
 
 def project_extract(db_path):
 
-    add_debug(("extract: " + db_path))
+    #add_debug(("extract: " + db_path))
 
     #df = get_df_sql2()
     #print(df)
@@ -40,6 +39,7 @@ def project_extract(db_path):
         glb.project_df = create_df_sql("select * from [Project Data]",cnn)
         glb.architects = create_df_sql("select * from [Solas Architects]",cnn)
         glb.architect_rates = create_df_sql("select * from [Solas Architect Rates]",cnn).sort('Rate Start Date')
+
         glb.financial_df = create_df_sql("select * from [Financials]",cnn)
 
         glb.project_titles = glb.project_df['Project Title'].to_list()

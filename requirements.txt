@@ -1,0 +1,4 @@
+customtkinter
+polars
+pyodbc
+openpyxl

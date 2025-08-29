@@ -20,7 +20,10 @@ class GeneralException(Exception):
 def content_report(report_path):
 
     if glb.timesheet_df.is_empty() or glb.project_df.is_empty():
-        print("not all files loaded")
+        if glb.timesheet_df.is_empty():
+            print("Timesheet not loaded" )
+        if glb.project_df.is_empty():
+            print("Database not loaded")
         return
 
     process_time_sheet()
@@ -83,7 +86,9 @@ def process_time_sheet():
     for row in glb.timesheet_df.iter_rows(named=True):
 
         name = '{} {}'.format(row['fname'],row['lname'])
-        local_date = dt.datetime.strptime(row['local_date'],'%Y-%m-%d')
+        print("process_time_sheet:",row)
+        #local_date = dt.datetime.strptime(row['local_date'],'%Y-%m-%d')
+        local_date = dt.datetime.strptime(row['local_date'], '%m/%d/%Y')
         hours = float(row['hours'])
         jobcode1 = row['jobcode_1']
         jobcode2 = row['jobcode_2']
@@ -140,8 +145,10 @@ def get_rate(name,date):
     """Get the hourly rate active at the date for person name"""
 
     rate = None
+    #print("get rate for:",name,date)
 
     for row in glb.architect_rates.iter_rows(named = True):
+        #print("get_rate row:",row)
         an = glb.architects['Architects'][int(row['Architect'])-1]
 
         if PYODBC:
@@ -151,9 +158,14 @@ def get_rate(name,date):
         if MDB_PARSER:
             start_date = dt.datetime.strptime(row['Rate Start Date'],"%m/%d/%y 00:00:00")
 
+        #print("get_rate:",name,an,row["Hourly Rate"],date,start_date)
+
         if name == an:
+            #print("get_rate name found",name,an)
             if date>=start_date:
                 rate = row['Hourly Rate']
+                #print("get_rate: found rate", rate)
+
     return rate
 
 def create_summary(task,sheet,row,col):
