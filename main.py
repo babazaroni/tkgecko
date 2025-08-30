@@ -15,8 +15,15 @@ if platform.system() == 'Windows':
 else:
     slash = "/"
 
-report_path = str(Path.home())
-report_path = report_path + slash + "report.xlsx"
+report_path = Path(sys.executable)
+print("------------- report path----------",report_path,report_path.name,report_path.parent)
+if "python" in report_path.name:
+    print("its not an execut")
+    report_path = Path.home()
+else:
+    report_path = report_path.parent
+
+report_path = str(report_path) + slash + "Solas Generated Report.xlsx"
 print("report_path: ",report_path)
 
 #sys.path.append('/home/cc/Solas/webapp/pythonProject/app')
@@ -34,7 +41,7 @@ from accessdb import project_extract
 no_project_file = "No Project DB Loaded"
 no_timesheet_file = "No Timesheet CSV Loaded"
 
-DEV = True
+DEV = False
 
 if DEV is True:
     project_file_dev_path = "/home/cc/Solas/Database Updated 2024-6.accdb"
