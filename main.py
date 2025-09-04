@@ -23,7 +23,7 @@ if "python" in report_path.name:
 else:
     report_path = report_path.parent
 
-report_path = str(report_path) + slash + "Solas Generated Report.xlsx"
+report_path = str(report_path) + slash + "SolasReport.xlsx"
 print("report_path: ",report_path)
 
 #sys.path.append('/home/cc/Solas/webapp/pythonProject/app')
