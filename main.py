@@ -88,10 +88,10 @@ def generate_report():
 
 def generate_report_request():
     if file_path_project.cget("text") == no_project_file:
-        report_status.configure(text = "No Project DB specified",text_color="red")
+        report_status.configure(text = "No Project DB specified.",text_color="red")
         return
     if file_path_timesheet.cget("text") == no_timesheet_file:
-        report_status.configure(text = "No Timesheet CSV specified",text_color = "red")
+        report_status.configure(text = "No Timesheet CSV specified.",text_color = "red")
         return
 
     generate_report()
