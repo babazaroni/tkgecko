@@ -17,21 +17,27 @@ class GeneralException(Exception):
 
 
 
+
 def content_report(report_path):
 
     if glb.timesheet_df.is_empty() or glb.project_df.is_empty():
         if glb.timesheet_df.is_empty():
-            print("Timesheet not loaded" )
+            raise GeneralException("Timesheet not loaded" )
         if glb.project_df.is_empty():
-            print("Database not loaded")
+            raise GeneralException("Database not loaded")
         return
 
+    #try:
     process_time_sheet()
     process_financials()
 
     report_file_name = create_report(report_path)
 
     return report_file_name
+
+    #except:
+    #    print("content_report: now we are catching")
+    #    pass
 
 
 def create_key(input):
@@ -110,6 +116,7 @@ def process_time_sheet():
         rate = get_rate(name,local_date)
         if not rate:
             message = "No Rate for: {} at time {}".format(name,local_date)
+            print("process_time_sheet:",message)
             raise GeneralException(message)
 
         if glb.PYODBC:
@@ -134,12 +141,11 @@ def process_time_sheet():
 
         year['hour_totals'] = year_hour_totals
 
+        None
 
 
     #print("book------------------------")
     #pprint.pp(glb.timesheet_dict)
-
-    pass
 
 def get_rate(name,date):
     """Get the hourly rate active at the date for person name"""

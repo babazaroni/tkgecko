@@ -75,8 +75,15 @@ def connect_timesheet():
     pass
 
 def generate_report():
-    content_report(report_path)
-    report_status.configure(text = "report generated",text_color="green")
+    try:
+        content_report(report_path)
+        report_status.configure(text = "report generated",text_color="green")
+    except Exception as e:
+        print(e)
+        if type(e).__name__ == "GeneralException":
+            report_status.configure(text = e.message,text_color="red")
+        else:
+            report_status.configure(text = str(e),text_color = "red")
 
 def generate_report_request():
     if file_path_project.cget("text") == no_project_file:
