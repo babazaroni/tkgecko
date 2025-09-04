@@ -37,6 +37,7 @@ import globals as glb
 from content_report import create_report,content_report
 from polars import read_csv
 from accessdb import project_extract
+from content_report import GeneralException
 
 no_project_file = "No Project DB Loaded"
 no_timesheet_file = "No Timesheet CSV Loaded"
@@ -78,11 +79,11 @@ def generate_report():
     try:
         content_report(report_path)
         report_status.configure(text = "report generated",text_color="green")
-    except Exception as e:
+    except GeneralException as e:
         print(e)
-        if type(e).__name__ == "GeneralException":
-            report_status.configure(text = e.message,text_color="red")
-        else:
+        #if type(e).__name__ == "GeneralException":
+        report_status.configure(text = e.message,text_color="red")
+    except Exception as e:
             report_status.configure(text = str(e),text_color = "red")
 
 def generate_report_request():
