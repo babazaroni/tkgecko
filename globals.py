@@ -29,7 +29,7 @@ architect_rates = None
 #timesheet_df = pd.DataFrame()
 #financial_df = pd.DataFrame()
 timesheet_df = pl.DataFrame()
-financial_df = pl.DataFrame()
+financials_df = pl.DataFrame()
 tables_db = None
 tables_list = None
 table_selected = None
@@ -42,11 +42,11 @@ ref_iframe = None
 dbgs_df = pl.DataFrame()
 
 def global_clear():
-    global table_selected,tables_list,timesheet_df,financial_df,project_file
+    global table_selected,tables_list,timesheet_df,financials_df,project_file
     table_selected = None
     tables_list = None
     project_file = None
     ref_iframe = None
     timesheet_df = pl.DataFrame()
-    financial_df = pl.DataFrame()
+    financials_df = pl.DataFrame()
 

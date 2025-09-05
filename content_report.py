@@ -55,9 +55,9 @@ def process_financials():
     source_sum = 0
 
     print("process_financials:")
-    pprint.pprint(glb.financial_df)
+    pprint.pprint(glb.financials_df)
 
-    for row in glb.financial_df.iter_rows(named = True):
+    for row in glb.financials_df.iter_rows(named = True):
 
         project_identifier = "{} / {}".format(row['Project ID'],row['Project Title'])
         project_identifier_key = create_key(project_identifier)

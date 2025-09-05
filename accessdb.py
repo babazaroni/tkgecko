@@ -40,7 +40,7 @@ def project_extract(db_path):
         glb.architects = create_df_sql("select * from [Solas Architects]",cnn)
         glb.architect_rates = create_df_sql("select * from [Solas Architect Rates]",cnn).sort('Rate Start Date')
 
-        glb.financial_df = create_df_sql("select * from [Financials]",cnn)
+        glb.financials_df = create_df_sql("select * from [Financials]",cnn)
 
         glb.project_titles = glb.project_df['Project Title'].to_list()
 
@@ -60,7 +60,7 @@ def project_extract(db_path):
         #glb.architect_rates = pd.DataFrame.from_dict(architect_rates).sort_values(by=['Rate Start Date']).dropna(axis=0)
         glb.architect_rates = pl.DataFrame(architect_rates)
         financials = glb.db.parse_table('Financials')
-        glb.financial_df = pl.DataFrame(financials)
+        glb.financials_df = pl.DataFrame(financials)
 
 
     if glb.MDB_PARSER:
@@ -82,10 +82,10 @@ def project_extract(db_path):
         table = glb.db.get_table("Solas Architect Rates")
         glb.architect_rates = create_df(table).sort('Rate Start Date')
         table = glb.db.get_table("Financials")
-        glb.financial_df = create_df(table)
+        glb.financials_df = create_df(table)
 
         print("glb.financial_df:", len(glb.financial_df))
-        print("keys:",glb.financial_df.columns)
+        print("keys:",glb.financials_df.columns)
 
     glb.project_titles.sort()
 
